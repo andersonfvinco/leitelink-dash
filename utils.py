@@ -1,7 +1,10 @@
+import pandas as pd
+import pyarrow.parquet as pq
 import geopandas as gpd
 import boto3
 from dotenv import load_dotenv
 import os
+import io
 
 load_dotenv()
 
@@ -73,3 +76,22 @@ def write_txt_to_s3(bucket_name, file_name, content):
 
     # Faz o upload do conteúdo como arquivo
     s3_client.put_object(Bucket=bucket_name, Key=file_name, Body=content_bytes)
+
+
+def read_parquet_from_s3(bucket_name, file_name):
+    """Lê um arquivo Parquet do S3 e retorna um DataFrame."""
+    # Configura o cliente S3
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=AWS_ACCESS_KEY,
+        aws_secret_access_key=AWS_SECRET_KEY,
+        region_name=AWS_REGION,
+    )
+    
+    # Baixa o arquivo do S3 para um objeto BytesIO
+    response = s3_client.get_object(Bucket=bucket_name, Key=file_name)
+    parquet_data = response["Body"].read()  # Lê o corpo da resposta como bytes
+    
+    # Lê o Parquet com pandas
+    df = pd.read_parquet(io.BytesIO(parquet_data), engine="pyarrow")
+    return df
