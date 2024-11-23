@@ -1,6 +1,9 @@
 import geopandas as gpd
 import boto3
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Configuração das credenciais AWS
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")

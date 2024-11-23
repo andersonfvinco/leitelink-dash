@@ -8,3 +8,4 @@ plotly-geo==1.0.0
 geopandas==1.0.1
 geopandas[all]
 boto3==1.35.66
+python_dotenv==1.0.1
