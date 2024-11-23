@@ -17,10 +17,10 @@ st.set_page_config(
 st.markdown("""
     <style>
         .main .block-container {
-            width: 90% !important;
-            max-width: 90% !important;
-            padding-left: 5 !important;
-            padding-right: 5 !important;
+            width: 96% !important;
+            max-width: 96% !important;
+            padding-left: 2 !important;
+            padding-right: 2 !important;
         }
         .stApp {
             width: 100% !important;
@@ -96,6 +96,10 @@ with col2:
     ligar_tanque = st.checkbox(
         "Ligar tanque"
     )
+    if ligar_tanque:
+        write_txt_to_s3(bucket_name='poc-leitelink', file_name='prototipo1/comando.txt', content='Ligar')
+    else:
+        write_txt_to_s3(bucket_name='poc-leitelink', file_name='prototipo1/comando.txt', content='Desligar')
     
     df = pd.read_parquet('sample_data.parquet')
     
@@ -105,6 +109,11 @@ with col2:
         x=df['time'], y=df['raw_int'], name='AD', mode='lines+markers'), row=1, col=1)
     fig.add_trace(go.Scatter(
         x=df['time'], y=df['Pressure_mV'], name='mV', mode='lines+markers'), row=2, col=1)
+    
+    fig.update_layout(autosize=True,
+                    margin={"r":0,"t":0,"l":0,"b":0},
+                    showlegend=False
+                )
 
     st.plotly_chart(fig, use_container_width=True)
 
