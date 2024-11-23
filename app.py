@@ -105,7 +105,7 @@ with col2:
         eq = df_equip.loc[df_equip['fazenda'] == equipamento, 'equip'].values[0]
         write_txt_to_s3(bucket_name='poc-leitelink', file_name=f"{eq}/comando.txt", content='Desligar')
     
-    df = pd.read_parquet('sample_data.parquet')
+    df = pd.read_parquet('data/sample_data.parquet')
     
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.075)
 
