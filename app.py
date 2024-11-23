@@ -7,6 +7,8 @@ import geopandas as gpd
 from utils import *
 import json
 
+dict_equip = {'fazenda':['Fazenda x', 'Fazenda y', 'Fazenda z'], 'equip':['prototipo1', 'prototipo2', 'prototipo3']}
+df_equip = pd.DataFrame(dict_equip)
 
 st.set_page_config(
     page_title='LeiteLink',
@@ -91,15 +93,17 @@ with col2:
     
     #st.header("Col2")
     equipamento = st.selectbox(
-        "Selecione o tanque:", ['equip1', 'equip2', 'equip3'], index=0
+        "Selecione o tanque:", df_equip['fazenda'].tolist(), index=0
     )
     ligar_tanque = st.checkbox(
         "Ligar tanque"
     )
     if ligar_tanque:
-        write_txt_to_s3(bucket_name='poc-leitelink', file_name='prototipo1/comando.txt', content='Ligar')
+        eq = df_equip.loc[df_equip['fazenda'] == equipamento, 'equip'].values[0]
+        write_txt_to_s3(bucket_name='poc-leitelink', file_name=f"{eq}/comando.txt", content='Ligar')
     else:
-        write_txt_to_s3(bucket_name='poc-leitelink', file_name='prototipo1/comando.txt', content='Desligar')
+        eq = df_equip.loc[df_equip['fazenda'] == equipamento, 'equip'].values[0]
+        write_txt_to_s3(bucket_name='poc-leitelink', file_name=f"{eq}/comando.txt", content='Desligar')
     
     df = pd.read_parquet('sample_data.parquet')
     
